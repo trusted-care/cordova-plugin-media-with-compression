@@ -387,28 +387,31 @@ for significantly better compression.
     if ([resourceURL isFileURL]) {
         audioFile.player = [[CDVAudioPlayer alloc] initWithContentsOfURL:resourceURL error:&playerError];
     } else {
-        NSMutableURLRequest* request = [NSMutableURLRequest requestWithURL:resourceURL];
-        NSString* userAgent = [self.commandDelegate userAgent];
-        if (userAgent) {
-            [request setValue:userAgent forHTTPHeaderField:@"User-Agent"];
-        }
 
-        NSURLResponse* __autoreleasing response = nil;
-        NSData* data = [NSURLConnection sendSynchronousRequest:request returningResponse:&response error:&playerError];
-        if (playerError) {
-            NSLog(@"Unable to download audio from: %@", [resourceURL absoluteString]);
-        } else {
-            // bug in AVAudioPlayer when playing downloaded data in NSData - we have to download the file and play from disk
-            CFUUIDRef uuidRef = CFUUIDCreate(kCFAllocatorDefault);
-            CFStringRef uuidString = CFUUIDCreateString(kCFAllocatorDefault, uuidRef);
-            NSString* filePath = [NSString stringWithFormat:@"%@/%@", [NSTemporaryDirectory()stringByStandardizingPath], uuidString];
-            CFRelease(uuidString);
-            CFRelease(uuidRef);
+	// NOTE: Disabled as this isn't supported anymore with cordova 10 and we don't use it anyhow.
+	    
+//         NSMutableURLRequest* request = [NSMutableURLRequest requestWithURL:resourceURL];
+//         NSString* userAgent = [self.commandDelegate userAgent];
+//         if (userAgent) {
+//             [request setValue:userAgent forHTTPHeaderField:@"User-Agent"];
+//         }
 
-            [data writeToFile:filePath atomically:YES];
-            NSURL* fileURL = [NSURL fileURLWithPath:filePath];
-            audioFile.player = [[CDVAudioPlayer alloc] initWithContentsOfURL:fileURL error:&playerError];
-        }
+//         NSURLResponse* __autoreleasing response = nil;
+//         NSData* data = [NSURLConnection sendSynchronousRequest:request returningResponse:&response error:&playerError];
+//         if (playerError) {
+//             NSLog(@"Unable to download audio from: %@", [resourceURL absoluteString]);
+//         } else {
+//             // bug in AVAudioPlayer when playing downloaded data in NSData - we have to download the file and play from disk
+//             CFUUIDRef uuidRef = CFUUIDCreate(kCFAllocatorDefault);
+//             CFStringRef uuidString = CFUUIDCreateString(kCFAllocatorDefault, uuidRef);
+//             NSString* filePath = [NSString stringWithFormat:@"%@/%@", [NSTemporaryDirectory()stringByStandardizingPath], uuidString];
+//             CFRelease(uuidString);
+//             CFRelease(uuidRef);
+
+//             [data writeToFile:filePath atomically:YES];
+//             NSURL* fileURL = [NSURL fileURLWithPath:filePath];
+//             audioFile.player = [[CDVAudioPlayer alloc] initWithContentsOfURL:fileURL error:&playerError];
+//         }
     }
 
     if (playerError != nil) {
